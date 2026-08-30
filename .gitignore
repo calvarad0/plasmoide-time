@@ -1,0 +1,5 @@
+# Packaging artifacts
+*.plasmoid
+
+# Build directories
+build/

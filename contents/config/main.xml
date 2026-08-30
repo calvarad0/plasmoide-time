@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name=""/>
+  <group name="General">
+    <entry name="city" type="String">
+      <label>The city used to look up coordinates and timezone.</label>
+      <default>Buenos Aires</default>
+    </entry>
+    <entry name="units" type="String">
+      <label>Temperature and wind units: c = Celsius, f = Fahrenheit.</label>
+      <default>c</default>
+      <choices>
+        <choice name="c"/>
+        <choice name="f"/>
+      </choices>
+    </entry>
+    <entry name="timeFormat" type="String">
+      <label>Time format: 24 = 24-hour, 12 = 12-hour.</label>
+      <default>24</default>
+      <choices>
+        <choice name="24"/>
+        <choice name="12"/>
+      </choices>
+    </entry>
+    <entry name="refreshMinutes" type="Int">
+      <label>How often the weather is refreshed, in minutes.</label>
+      <default>15</default>
+      <min>5</min>
+      <max>120</max>
+    </entry>
+  </group>
+</kcfg>
