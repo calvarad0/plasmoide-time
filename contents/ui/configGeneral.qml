@@ -13,6 +13,16 @@ KCM.SimpleKCM {
     property string cfg_units: "c"
     property string cfg_timeFormat: "24"
     property alias cfg_refreshMinutes: refreshMinutesSpin.value
+    property alias cfg_showTime: showTimeBox.checked
+    property alias cfg_showDate: showDateBox.checked
+    property alias cfg_showWeatherIcon: showWeatherIconBox.checked
+    property alias cfg_showTemperature: showTemperatureBox.checked
+    property alias cfg_showCondition: showConditionBox.checked
+    property alias cfg_showFeelsLike: showFeelsLikeBox.checked
+    property alias cfg_showHumidity: showHumidityBox.checked
+    property alias cfg_showWind: showWindBox.checked
+    property alias cfg_showUpdated: showUpdatedBox.checked
+    property alias cfg_showTooltip: showTooltipBox.checked
 
     // The framework may apply the saved values either before or after the page
     // finishes loading; re-syncing on change covers both orders. The user
@@ -76,6 +86,73 @@ KCM.SimpleKCM {
             to: 120
             stepSize: 5
             editable: true
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Panel")
+        }
+
+        QQC2.CheckBox {
+            id: showTimeBox
+            Kirigami.FormData.label: i18n("Show:")
+            text: i18n("Time")
+        }
+
+        QQC2.CheckBox {
+            id: showDateBox
+            text: i18n("Date")
+        }
+
+        QQC2.CheckBox {
+            id: showWeatherIconBox
+            text: i18n("Weather icon")
+        }
+
+        QQC2.CheckBox {
+            id: showTemperatureBox
+            text: i18n("Temperature")
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+            Kirigami.FormData.label: i18n("Popup")
+        }
+
+        QQC2.CheckBox {
+            id: showConditionBox
+            Kirigami.FormData.label: i18n("Show:")
+            text: i18n("Weather condition")
+        }
+
+        QQC2.CheckBox {
+            id: showFeelsLikeBox
+            text: i18n("Feels like")
+        }
+
+        QQC2.CheckBox {
+            id: showHumidityBox
+            text: i18n("Humidity")
+        }
+
+        QQC2.CheckBox {
+            id: showWindBox
+            text: i18n("Wind")
+        }
+
+        QQC2.CheckBox {
+            id: showUpdatedBox
+            text: i18n("Last updated")
+        }
+
+        Kirigami.Separator {
+            Kirigami.FormData.isSection: true
+        }
+
+        QQC2.CheckBox {
+            id: showTooltipBox
+            Kirigami.FormData.label: i18n("Tooltip:")
+            text: i18n("Show on hover")
         }
     }
 }

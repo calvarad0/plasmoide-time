@@ -25,6 +25,21 @@ PlasmoidItem {
     readonly property bool useFahrenheit: Plasmoid.configuration ? (Plasmoid.configuration.units === "f") : false
     readonly property bool use12h: Plasmoid.configuration ? (Plasmoid.configuration.timeFormat === "12") : false
 
+    // visibility toggles; a missing value (old config) counts as enabled
+    function cfgFlag(name) {
+        return !Plasmoid.configuration || Plasmoid.configuration[name] !== false
+    }
+    readonly property bool showTime: cfgFlag("showTime")
+    readonly property bool showDate: cfgFlag("showDate")
+    readonly property bool showWeatherIcon: cfgFlag("showWeatherIcon")
+    readonly property bool showTemperature: cfgFlag("showTemperature")
+    readonly property bool showCondition: cfgFlag("showCondition")
+    readonly property bool showFeelsLike: cfgFlag("showFeelsLike")
+    readonly property bool showHumidity: cfgFlag("showHumidity")
+    readonly property bool showWind: cfgFlag("showWind")
+    readonly property bool showUpdated: cfgFlag("showUpdated")
+    readonly property bool showTooltip: cfgFlag("showTooltip")
+
     // ----- resolved city state (filled by the geocoding request) -----
     property string resolvedName: ""     // localized city name, e.g. "Buenos Aires"
     property string resolvedCountry: ""  // e.g. "Argentina"
@@ -68,8 +83,9 @@ PlasmoidItem {
     Plasmoid.icon: "weather-none-ambivalent"
     Plasmoid.configurationRequired: root.cfgCity === ""
 
-    toolTipMainText: root.toolTipTitle
-    toolTipSubText: root.toolTipBody
+    // empty texts hide the tooltip
+    toolTipMainText: root.showTooltip ? root.toolTipTitle : ""
+    toolTipSubText: root.showTooltip ? root.toolTipBody : ""
 
     readonly property string cityDisplayName: root.resolvedName !== "" ? root.resolvedName : root.cfgCity
     readonly property string cityHeader: root.resolvedCountry !== ""
@@ -78,6 +94,9 @@ PlasmoidItem {
 
     // wall-clock time of the current city, formatted per the configured format
     readonly property string timeText: Qt.formatTime(root.cityDateTime, root.use12h ? "h:mm AP" : "hh:mm")
+
+    // date of the current city, short and localized, e.g. "Fri 16 Oct"
+    readonly property string dateText: root.cityDateTime.toLocaleDateString(Qt.locale(), "ddd d MMM")
 
     // temperature in the configured units
     readonly property string tempText: root.fetchState === 2
@@ -108,22 +127,49 @@ PlasmoidItem {
         Layout.fillHeight: true
         spacing: Kirigami.Units.smallSpacing * 2
 
-        PlasmaComponents3.Label {
-            text: root.timeText
-            font: Kirigami.Theme.defaultFont
-            verticalAlignment: Text.AlignVCenter
+        readonly property bool showWeatherIconNow: root.showWeatherIcon && root.fetchState === 2
+        readonly property bool nothingShown: !root.showTime && !root.showDate
+            && !compactItem.showWeatherIconNow && !root.showTemperature
+
+        // time with the date under it
+        ColumnLayout {
+            visible: root.showTime || root.showDate
+            spacing: 0
+
+            PlasmaComponents3.Label {
+                Layout.alignment: Qt.AlignHCenter
+                visible: root.showTime
+                text: root.timeText
+                font: Kirigami.Theme.defaultFont
+            }
+
+            PlasmaComponents3.Label {
+                Layout.alignment: Qt.AlignHCenter
+                visible: root.showDate
+                text: root.dateText
+                font: Kirigami.Theme.smallFont
+            }
         }
 
         Kirigami.Icon {
             source: root.weatherIcon
             Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.small)
             Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.small)
-            visible: root.fetchState === 2
+            visible: compactItem.showWeatherIconNow
         }
 
         PlasmaComponents3.Label {
             text: root.tempText
             verticalAlignment: Text.AlignVCenter
+            visible: root.showTemperature
+        }
+
+        // fallback so the widget stays clickable when every item is disabled
+        Kirigami.Icon {
+            source: Plasmoid.icon
+            Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.small)
+            Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.small)
+            visible: compactItem.nothingShown
         }
     }
 
@@ -146,9 +192,20 @@ PlasmoidItem {
                 text: root.cityHeader
             }
 
-            PlasmaComponents3.Label {
-                text: root.timeText
-                elide: Text.ElideRight
+            ColumnLayout {
+                spacing: 0
+
+                PlasmaComponents3.Label {
+                    Layout.alignment: Qt.AlignRight
+                    text: root.timeText
+                }
+
+                PlasmaComponents3.Label {
+                    Layout.alignment: Qt.AlignRight
+                    text: root.dateText
+                    font: Kirigami.Theme.smallFont
+                    opacity: 0.7
+                }
             }
 
             PlasmaComponents3.ToolButton {
@@ -202,7 +259,7 @@ PlasmoidItem {
 
                 PlasmaComponents3.Label {
                     text: root.conditionText
-                    visible: root.fetchState === 2
+                    visible: root.fetchState === 2 && root.showCondition
                 }
             }
         }
@@ -211,35 +268,40 @@ PlasmoidItem {
         GridLayout {
             columns: 2
             visible: root.fetchState === 2
+                && (root.showFeelsLike || root.showHumidity || root.showWind || root.showUpdated)
             rowSpacing: Kirigami.Units.smallSpacing
             columnSpacing: Kirigami.Units.largeSpacing
 
-            PlasmaComponents3.Label { text: i18n("Feels like") }
+            PlasmaComponents3.Label { text: i18n("Feels like"); visible: root.showFeelsLike }
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: root.feelsText
+                visible: root.showFeelsLike
             }
 
-            PlasmaComponents3.Label { text: i18n("Humidity") }
+            PlasmaComponents3.Label { text: i18n("Humidity"); visible: root.showHumidity }
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: root.humidity >= 0 ? (root.humidity + " %") : "---"
+                visible: root.showHumidity
             }
 
-            PlasmaComponents3.Label { text: i18n("Wind") }
+            PlasmaComponents3.Label { text: i18n("Wind"); visible: root.showWind }
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: root.windText
+                visible: root.showWind
             }
 
-            PlasmaComponents3.Label { text: i18n("Updated") }
+            PlasmaComponents3.Label { text: i18n("Updated"); visible: root.showUpdated }
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignRight
                 text: root.lastUpdated
+                visible: root.showUpdated
             }
         }
 

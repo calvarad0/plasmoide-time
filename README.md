@@ -9,7 +9,8 @@ APIs (no API key needed).
   weather refresh).
 - Current conditions on refresh: temperature, feels-like, humidity, wind speed,
   weather condition and icon.
-- Compact panel form (time + temperature), full popup with details, and tooltip.
+- Compact panel form (time, date, icon, temperature), full popup with details,
+  and tooltip. Every element can be turned off in the settings.
 - Nothing leaves your machine except the two Open-Meteo requests.
 
 ## Requirements
@@ -52,6 +53,16 @@ kpackagetool6 --type Plasma/Applet --remove org.plasma.citytimeweather
 | Temperature units  | `units`         | `c`            | `c` = Celsius, `f` = Fahrenheit        |
 | Time format        | `timeFormat`    | `24`           | `24` = 24-hour, `12` = 12-hour         |
 | Refresh interval   | `refreshMinutes`| `15`           | Weather only; 5–120 minutes            |
+| Show time          | `showTime` | `true` | Panel |
+| Show date          | `showDate` | `true` | Panel; shown under the time |
+| Show weather icon  | `showWeatherIcon` | `true` | Panel |
+| Show temperature   | `showTemperature` | `true` | Panel |
+| Show condition     | `showCondition` | `true` | Popup |
+| Show feels like    | `showFeelsLike` | `true` | Popup |
+| Show humidity      | `showHumidity` | `true` | Popup |
+| Show wind          | `showWind` | `true` | Popup |
+| Show last updated  | `showUpdated` | `true` | Popup |
+| Show tooltip       | `showTooltip` | `true` | Tooltip on hover |
 
 The temperature unit also drives the wind speed unit (km/h vs mph). The time
 format affects the compact view, the popup header and the tooltip.

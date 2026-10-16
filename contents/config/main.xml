@@ -31,5 +31,45 @@
       <min>5</min>
       <max>120</max>
     </entry>
+    <entry name="showTime" type="Bool">
+      <label>Show the city time in the panel.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showDate" type="Bool">
+      <label>Show the city date under the time in the panel.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showWeatherIcon" type="Bool">
+      <label>Show the weather icon in the panel.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showTemperature" type="Bool">
+      <label>Show the temperature in the panel.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showCondition" type="Bool">
+      <label>Show the weather condition text in the popup.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showFeelsLike" type="Bool">
+      <label>Show the feels-like row in the popup.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showHumidity" type="Bool">
+      <label>Show the humidity row in the popup.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showWind" type="Bool">
+      <label>Show the wind row in the popup.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showUpdated" type="Bool">
+      <label>Show the last-updated row in the popup.</label>
+      <default>true</default>
+    </entry>
+    <entry name="showTooltip" type="Bool">
+      <label>Show the tooltip when hovering the widget.</label>
+      <default>true</default>
+    </entry>
   </group>
 </kcfg>
