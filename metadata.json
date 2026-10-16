@@ -2,10 +2,10 @@
     "KPlugin": {
         "Authors": [
             {
-                "Email": "carlos@localhost",
-                "Name": "Carlos"
+                "Name": "Carlos Alvarado"
             }
         ],
+        "BugReportUrl": "https://github.com/calvarad0/plasmoide-time/issues",
         "Category": "Date and Time",
         "Description": "Weather and local time for a city, powered by Open-Meteo",
         "Description[es]": "Clima y hora local de una ciudad, con datos de Open-Meteo",
@@ -19,7 +19,8 @@
         "License": "GPL-2.0-or-later",
         "Name": "City Weather & Time",
         "Name[es]": "Clima y hora de la ciudad",
-        "Version": "0.1.0"
+        "Version": "0.1.0",
+        "Website": "https://github.com/calvarad0/plasmoide-time"
     },
     "KPackageStructure": "Plasma/Applet",
     "X-Plasma-API-Minimum-Version": "6.0"
