@@ -1,8 +1,10 @@
 import QtQuick
 import QtQuick.Controls as QQC2
+import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import org.kde.kcmutils as KCM
 
-Item {
+KCM.SimpleKCM {
     id: configGeneral
 
     // These cfg_* properties are synchronized with the plasmoid configuration
@@ -34,20 +36,16 @@ Item {
     }
 
     Kirigami.FormLayout {
-        anchors {
-            left: parent.left
-            top: parent.top
-            right: parent.right
-        }
-
         QQC2.TextField {
             id: cityField
+            Kirigami.FormData.label: i18n("City:")
             Layout.fillWidth: true
             placeholderText: i18n("e.g. Buenos Aires")
         }
 
         QQC2.ComboBox {
             id: unitsCombo
+            Kirigami.FormData.label: i18n("Units:")
             textRole: "text"
             valueRole: "value"
             model: [
@@ -60,6 +58,7 @@ Item {
 
         QQC2.ComboBox {
             id: timeFormatCombo
+            Kirigami.FormData.label: i18n("Time format:")
             textRole: "text"
             valueRole: "value"
             model: [
@@ -72,6 +71,7 @@ Item {
 
         QQC2.SpinBox {
             id: refreshMinutesSpin
+            Kirigami.FormData.label: i18n("Refresh every (minutes):")
             from: 5
             to: 120
             stepSize: 5
