@@ -12,9 +12,8 @@
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
-import org.kde.plasma.core as PlasmaCore
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents3
-import org.kde.plasma.clock
 import "js/weather.js" as Weather
 
 PlasmoidItem {
@@ -43,18 +42,31 @@ PlasmoidItem {
     property real windKmh: 0             // 10 m wind speed, always stored in km/h
     property string lastUpdated: ""      // wall-clock time of the last successful refresh
 
-    // ----- timezone-aware wall clock; same module the stock Digital Clock applet uses -----
-    Clock {
-        id: cityClock
-        // "" -> system timezone; otherwise the IANA zone of the resolved city.
-        // TODO verify on target: an empty timeZone must fall back to the system timezone.
-        timeZone: root.cityTimezone
+    // ----- wall clock of the city -----
+    // The city's UTC offset comes from the forecast response (utc_offset_seconds),
+    // so no KDE clock module is needed. It is refreshed with the weather, which
+    // keeps daylight-saving changes in sync within one refresh interval.
+    property int cityUtcOffset: 0        // seconds east of UTC
+    property bool hasCityOffset: false   // false -> show the system time
+    property date now: new Date()
+
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        triggeredOnStart: true
+        onTriggered: root.now = new Date()
     }
+
+    // A Date whose *local* fields equal the city's wall-clock time, for Qt.formatTime().
+    readonly property date cityDateTime: root.hasCityOffset
+        ? new Date(root.now.getTime() + root.now.getTimezoneOffset() * 60000 + root.cityUtcOffset * 1000)
+        : root.now
 
     // ----- presentation -----
     preferredRepresentation: compactRepresentation
     Plasmoid.icon: "weather-none-ambivalent"
-    configurationRequired: root.cfgCity === ""
+    Plasmoid.configurationRequired: root.cfgCity === ""
 
     toolTipMainText: root.toolTipTitle
     toolTipSubText: root.toolTipBody
@@ -65,7 +77,7 @@ PlasmoidItem {
         : root.cityDisplayName
 
     // wall-clock time of the current city, formatted per the configured format
-    readonly property string timeText: Qt.formatTime(cityClock.dateTime, root.use12h ? "h:mm AP" : "hh:mm")
+    readonly property string timeText: Qt.formatTime(root.cityDateTime, root.use12h ? "h:mm AP" : "hh:mm")
 
     // temperature in the configured units
     readonly property string tempText: root.fetchState === 2
@@ -94,18 +106,18 @@ PlasmoidItem {
     compactRepresentation: RowLayout {
         id: compactItem
         Layout.fillHeight: true
-        spacing: PlasmaCore.Units.smallSpacing * 2
+        spacing: Kirigami.Units.smallSpacing * 2
 
         PlasmaComponents3.Label {
             text: root.timeText
-            font: PlasmaCore.Theme.defaultFont
+            font: Kirigami.Theme.defaultFont
             verticalAlignment: Text.AlignVCenter
         }
 
-        PlasmaComponents3.Icon {
+        Kirigami.Icon {
             source: root.weatherIcon
-            Layout.preferredWidth: Math.round(PlasmaCore.Units.iconSizes.small)
-            Layout.preferredHeight: Math.round(PlasmaCore.Units.iconSizes.small)
+            Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.small)
+            Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.small)
             visible: root.fetchState === 2
         }
 
@@ -118,16 +130,16 @@ PlasmoidItem {
     // ----- full representation: the popup shown when clicking the widget ----
     fullRepresentation: ColumnLayout {
         id: fullItem
-        spacing: PlasmaCore.Units.largeSpacing
+        spacing: Kirigami.Units.largeSpacing
         Layout.minimumWidth: 260
         Layout.minimumHeight: 220
 
         // header: city + time
         RowLayout {
             Layout.fillWidth: true
-            spacing: PlasmaCore.Units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
 
-            PlasmaComponents3.Heading {
+            Kirigami.Heading {
                 Layout.fillWidth: true
                 level: 3
                 elide: Text.ElideRight
@@ -150,7 +162,7 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             visible: root.cfgCity === ""
-            spacing: PlasmaCore.Units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
 
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
@@ -169,12 +181,12 @@ PlasmoidItem {
         RowLayout {
             Layout.fillWidth: true
             visible: root.cfgCity !== ""
-            spacing: PlasmaCore.Units.largeSpacing
+            spacing: Kirigami.Units.largeSpacing
 
-            PlasmaComponents3.Icon {
+            Kirigami.Icon {
                 source: root.weatherIcon
-                Layout.preferredWidth: Math.round(PlasmaCore.Units.iconSizes.large)
-                Layout.preferredHeight: Math.round(PlasmaCore.Units.iconSizes.large)
+                Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.large)
+                Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.large)
                 visible: root.fetchState === 2
             }
 
@@ -184,7 +196,7 @@ PlasmoidItem {
 
                 PlasmaComponents3.Label {
                     text: root.tempText
-                    font.pixelSize: Math.round(PlasmaCore.Theme.defaultFont.pixelSize * 2)
+                    font.pixelSize: Math.round(Kirigami.Theme.defaultFont.pixelSize * 2)
                     font.weight: Font.DemiBold
                 }
 
@@ -199,8 +211,8 @@ PlasmoidItem {
         GridLayout {
             columns: 2
             visible: root.fetchState === 2
-            rowSpacing: PlasmaCore.Units.smallSpacing
-            columnSpacing: PlasmaCore.Units.largeSpacing
+            rowSpacing: Kirigami.Units.smallSpacing
+            columnSpacing: Kirigami.Units.largeSpacing
 
             PlasmaComponents3.Label { text: i18n("Feels like") }
             PlasmaComponents3.Label {
@@ -235,12 +247,12 @@ PlasmoidItem {
         ColumnLayout {
             Layout.fillWidth: true
             visible: root.fetchState === 3 && root.cfgCity !== ""
-            spacing: PlasmaCore.Units.smallSpacing
+            spacing: Kirigami.Units.smallSpacing
 
             PlasmaComponents3.Label {
                 Layout.fillWidth: true
                 horizontalAlignment: Text.AlignHCenter
-                color: PlasmaCore.Theme.negativeTextColor
+                color: Kirigami.Theme.negativeTextColor
                 text: root.translateError(root.lastErrorCode)
             }
 
@@ -256,7 +268,7 @@ PlasmoidItem {
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignHCenter
             visible: root.fetchState === 1 && root.cfgCity !== ""
-            color: PlasmaCore.Theme.disabledTextColor
+            color: Kirigami.Theme.disabledTextColor
             text: i18n("Loading\u2026")
         }
     }
@@ -295,6 +307,8 @@ PlasmoidItem {
                 root.humidity = Weather.number(data, ["current", "relative_humidity_2m"], -1)
                 root.windKmh = Weather.number(data, ["current", "wind_speed_10m"], 0)
                 root.weatherCode = Weather.number(data, ["current", "weather_code"], -1)
+                root.cityUtcOffset = Weather.number(data, ["utc_offset_seconds"], 0)
+                root.hasCityOffset = typeof data.utc_offset_seconds === "number"
                 root.lastUpdated = Qt.formatTime(new Date(), root.use12h ? "h:mm AP" : "hh:mm")
                 root.fetchState = 2
             },
@@ -311,6 +325,8 @@ PlasmoidItem {
         root.resolvedName = ""
         root.resolvedCountry = ""
         root.cityTimezone = ""
+        root.cityUtcOffset = 0
+        root.hasCityOffset = false
         root.cityLat = 0
         root.cityLon = 0
         root.weatherCode = -1

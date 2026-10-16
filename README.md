@@ -4,9 +4,9 @@ A Plasma 6 applet that shows the **current weather and the local wall-clock
 time of any city**, using the free [Open-Meteo](https://open-meteo.com) public
 APIs (no API key needed).
 
-- City time is shown in the city's own timezone (from its IANA timezone id),
-  with correct daylight-saving handling — rendered by the same
-  `org.kde.plasma.clock` module the stock Digital Clock applet uses.
+- City time is shown in the city's own timezone, using the UTC offset that
+  Open-Meteo reports for it (daylight-saving changes are picked up on the next
+  weather refresh).
 - Current conditions on refresh: temperature, feels-like, humidity, wind speed,
   weather condition and icon.
 - Compact panel form (time + temperature), full popup with details, and tooltip.
@@ -62,8 +62,9 @@ format affects the compact view, the popup header and the tooltip.
    `geocoding-api.open-meteo.com` → coordinates + IANA timezone.
 2. Fetch `current` weather for those coordinates via `api.open-meteo.com`
    (temperature, apparent temperature, humidity, wind speed, WMO weather code).
-3. The wall clock reads the city's IANA timezone through the
-   `org.kde.plasma.clock` `Clock` component — no manual offset math.
+3. The wall clock adds the forecast's `utc_offset_seconds` to the current UTC
+   time. Until the first successful fetch it shows the system time. No KDE
+   clock module is required, so it works on every Plasma 6 release.
 4. A timer re-fetches the weather every `refreshMinutes`, pausing while a
    request is already in flight.
 
@@ -81,17 +82,12 @@ contents/ui/configGeneral.qml  Configuration page (general settings)
 ## Credits & license
 
 - Weather data: [Open-Meteo](https://open-meteo.com) (CC-BY 4.0).
-- Clock rendering: the `org.kde.plasma.clock` module shipped with
-  plasma-workspace (the same module KDE's Digital Clock applet uses) —
-  under the KDE licensing of the Plasma team.
 - This widget: GPL-2.0-or-later, © Carlos.
 
 ## Known caveats
 
 - **First-run verification** — the following points could not be verified from
   docs alone and are marked `// TODO verify on target` in the code:
-  - An empty `timeZone` on the `Clock` component falls back to the system
-    timezone (used until the first successful geocoding).
   - At least one of `Plasmoid.internalAction("configure")` /
     `Plasmoid.action("configure")` / `Plasmoid.showConfigurationInterface()`
     opens the configuration dialog.
