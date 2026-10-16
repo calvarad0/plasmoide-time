@@ -7,7 +7,7 @@
   <group name="General">
     <entry name="city" type="String">
       <label>The city used to look up coordinates and timezone.</label>
-      <default>Buenos Aires</default>
+      <default>Caracas</default>
     </entry>
     <entry name="units" type="String">
       <label>Temperature and wind units: c = Celsius, f = Fahrenheit.</label>

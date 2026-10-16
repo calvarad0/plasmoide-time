@@ -49,7 +49,7 @@ kpackagetool6 --type Plasma/Applet --remove org.plasma.citytimeweather
 
 | Setting            | Key             | Default        | Notes                                  |
 | ------------------ | --------------- | -------------- | -------------------------------------- |
-| City name          | `city`          | `Buenos Aires` | Free text; resolved via geocoding      |
+| City name          | `city`          | `Caracas`      | Free text; resolved via geocoding      |
 | Temperature units  | `units`         | `c`            | `c` = Celsius, `f` = Fahrenheit        |
 | Time format        | `timeFormat`    | `24`           | `24` = 24-hour, `12` = 12-hour         |
 | Refresh interval   | `refreshMinutes`| `15`           | Weather only; 5–120 minutes            |
