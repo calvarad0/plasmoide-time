@@ -71,5 +71,17 @@
       <label>Show the tooltip when hovering the widget.</label>
       <default>true</default>
     </entry>
+    <entry name="tempFontSizePanel" type="Int">
+      <label>Temperature font size in panels, in points.</label>
+      <default>10</default>
+      <min>6</min>
+      <max>48</max>
+    </entry>
+    <entry name="tempFontSizeDesktop" type="Int">
+      <label>Temperature font size on the desktop, in points.</label>
+      <default>12</default>
+      <min>6</min>
+      <max>48</max>
+    </entry>
   </group>
 </kcfg>

@@ -50,11 +50,12 @@ function requestJson(url, onSuccess, onError) {
 
 // ---------- geocoding ----------
 // Resolves a city name to coordinates and an IANA timezone id.
+// language: ISO 639-1 code for the returned names (e.g. "es"); defaults to "en".
 // onSuccess receives: { name, country, latitude, longitude, timezone }
-function fetchGeocode(city, onSuccess, onError) {
+function fetchGeocode(city, language, onSuccess, onError) {
     var url = "https://geocoding-api.open-meteo.com/v1/search"
         + "?name=" + encodeURIComponent(city)
-        + "&count=1&language=en&format=json"
+        + "&count=1&language=" + encodeURIComponent(language || "en") + "&format=json"
     requestJson(url, function (data) {
         if (!data || !Array.isArray(data.results) || data.results.length === 0) {
             // A successful HTTP response without a "results" key means no match.
@@ -95,21 +96,27 @@ function fetchForecast(latitude, longitude, timezone, onSuccess, onError) {
 
 // ---------- WMO weather interpretation codes ----------
 // Codes documented by Open-Meteo (https://open-meteo.com/en/docs).
-// Returns a display label; the widget UI is in English by default.
+// Marks a string for translation extraction without translating it here;
+// the QML side passes the result through i18n().
+function I18N_NOOP(text) {
+    return text
+}
+
+// Returns an untranslated display label; translate it with i18n() in QML.
 function conditionLabel(code) {
-    if (code === 0)                 return "Clear sky"
-    if (code === 1)                 return "Mainly clear"
-    if (code === 2)                 return "Partly cloudy"
-    if (code === 3)                 return "Overcast"
-    if (code === 45 || code === 48) return "Fog"
-    if (code >= 51 && code <= 57)   return "Drizzle"
-    if (code >= 61 && code <= 67)   return "Rain"
-    if (code >= 71 && code <= 77)   return "Snowfall"
-    if (code >= 80 && code <= 82)   return "Rain showers"
-    if (code === 85 || code === 86) return "Snow showers"
-    if (code === 95)                return "Thunderstorm"
-    if (code === 96 || code === 99) return "Thunderstorm with hail"
-    return "Unknown"
+    if (code === 0)                 return I18N_NOOP("Clear sky")
+    if (code === 1)                 return I18N_NOOP("Mainly clear")
+    if (code === 2)                 return I18N_NOOP("Partly cloudy")
+    if (code === 3)                 return I18N_NOOP("Overcast")
+    if (code === 45 || code === 48) return I18N_NOOP("Fog")
+    if (code >= 51 && code <= 57)   return I18N_NOOP("Drizzle")
+    if (code >= 61 && code <= 67)   return I18N_NOOP("Rain")
+    if (code >= 71 && code <= 77)   return I18N_NOOP("Snowfall")
+    if (code >= 80 && code <= 82)   return I18N_NOOP("Rain showers")
+    if (code === 85 || code === 86) return I18N_NOOP("Snow showers")
+    if (code === 95)                return I18N_NOOP("Thunderstorm")
+    if (code === 96 || code === 99) return I18N_NOOP("Thunderstorm with hail")
+    return I18N_NOOP("Unknown")
 }
 
 // Returns the Breeze icon name for a WMO weather code.

@@ -23,6 +23,8 @@ KCM.SimpleKCM {
     property alias cfg_showWind: showWindBox.checked
     property alias cfg_showUpdated: showUpdatedBox.checked
     property alias cfg_showTooltip: showTooltipBox.checked
+    property alias cfg_tempFontSizePanel: tempFontSizePanelSpin.value
+    property alias cfg_tempFontSizeDesktop: tempFontSizeDesktopSpin.value
 
     // The framework may apply the saved values either before or after the page
     // finishes loading; re-syncing on change covers both orders. The user
@@ -112,6 +114,22 @@ KCM.SimpleKCM {
         QQC2.CheckBox {
             id: showTemperatureBox
             text: i18n("Temperature")
+        }
+
+        QQC2.SpinBox {
+            id: tempFontSizePanelSpin
+            Kirigami.FormData.label: i18n("Temperature size in panels (pt):")
+            from: 6
+            to: 48
+            editable: true
+        }
+
+        QQC2.SpinBox {
+            id: tempFontSizeDesktopSpin
+            Kirigami.FormData.label: i18n("Temperature size on desktop (pt):")
+            from: 6
+            to: 48
+            editable: true
         }
 
         Kirigami.Separator {

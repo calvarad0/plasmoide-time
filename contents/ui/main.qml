@@ -12,6 +12,7 @@
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 import org.kde.kirigami as Kirigami
 import org.kde.plasma.components as PlasmaComponents3
 import "js/weather.js" as Weather
@@ -39,6 +40,8 @@ PlasmoidItem {
     readonly property bool showWind: cfgFlag("showWind")
     readonly property bool showUpdated: cfgFlag("showUpdated")
     readonly property bool showTooltip: cfgFlag("showTooltip")
+    readonly property int cfgTempFontSizePanel: Plasmoid.configuration ? Plasmoid.configuration.tempFontSizePanel : 10
+    readonly property int cfgTempFontSizeDesktop: Plasmoid.configuration ? Plasmoid.configuration.tempFontSizeDesktop : 12
 
     // ----- resolved city state (filled by the geocoding request) -----
     property string resolvedName: ""     // localized city name, e.g. "Buenos Aires"
@@ -113,7 +116,7 @@ PlasmoidItem {
         ? (Math.round(root.useFahrenheit ? root.feelsC * 9 / 5 + 32 : root.feelsC) + "\u00B0")
         : "---"
 
-    readonly property string conditionText: root.weatherCode >= 0 ? Weather.conditionLabel(root.weatherCode) : ""
+    readonly property string conditionText: root.weatherCode >= 0 ? i18n(Weather.conditionLabel(root.weatherCode)) : ""
     readonly property string weatherIcon: root.weatherCode >= 0 ? Weather.conditionIcon(root.weatherCode) : "weather-none-ambivalent"
 
     readonly property string toolTipTitle: root.cfgCity === "" ? "" : root.cityHeader + " \u00B7 " + root.timeText
@@ -122,54 +125,99 @@ PlasmoidItem {
         : (root.fetchState === 3 ? i18n("Weather unavailable") : i18n("Loading\u2026"))
 
     // ----- compact representation: time + temperature, fits a panel ----------
-    compactRepresentation: RowLayout {
-        id: compactItem
+    compactRepresentation: MouseArea {
+        id: compactRoot
+        // a custom compact view must open the popup itself
+        Layout.minimumWidth: compactItem.implicitWidth
+        Layout.preferredWidth: compactItem.implicitWidth
+        Layout.minimumHeight: compactItem.implicitHeight
         Layout.fillHeight: true
-        spacing: Kirigami.Units.smallSpacing * 2
+        acceptedButtons: Qt.LeftButton
+        onClicked: root.expanded = !root.expanded
 
-        readonly property bool showWeatherIconNow: root.showWeatherIcon && root.fetchState === 2
-        readonly property bool nothingShown: !root.showTime && !root.showDate
-            && !compactItem.showWeatherIconNow && !root.showTemperature
+        RowLayout {
+            id: compactItem
+            anchors.fill: parent
+            spacing: Kirigami.Units.smallSpacing * 2
 
-        // time with the date under it
-        ColumnLayout {
-            visible: root.showTime || root.showDate
-            spacing: 0
+            readonly property bool showWeatherIconNow: root.showWeatherIcon && root.fetchState === 2
+            readonly property bool nothingShown: !root.showTime && !root.showDate
+                && !compactItem.showWeatherIconNow && !root.showTemperature
 
-            PlasmaComponents3.Label {
-                Layout.alignment: Qt.AlignHCenter
-                visible: root.showTime
-                text: root.timeText
-                font: Kirigami.Theme.defaultFont
+            // time with the date under it
+            ColumnLayout {
+                visible: root.showTime || root.showDate
+                spacing: 0
+
+                PlasmaComponents3.Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    visible: root.showTime
+                    text: root.timeText
+                    font: Kirigami.Theme.defaultFont
+                }
+
+                PlasmaComponents3.Label {
+                    Layout.alignment: Qt.AlignHCenter
+                    visible: root.showDate
+                    text: root.dateText
+                    font: Kirigami.Theme.smallFont
+                }
             }
 
-            PlasmaComponents3.Label {
-                Layout.alignment: Qt.AlignHCenter
-                visible: root.showDate
-                text: root.dateText
-                font: Kirigami.Theme.smallFont
+            // weather icon filling the available height, temperature overlaid on it
+            Item {
+                id: weatherBadge
+                visible: root.showTemperature || compactItem.showWeatherIconNow
+                Layout.fillHeight: true
+                Layout.minimumHeight: Kirigami.Units.iconSizes.small
+                Layout.preferredHeight: Kirigami.Units.iconSizes.large
+                Layout.preferredWidth: compactItem.showWeatherIconNow
+                    ? Math.max(height, tempOverlay.implicitWidth)
+                    : tempOverlay.implicitWidth
+
+                // square matching the drawn icon, so the label hugs the icon's corner even
+                // when the badge itself is not square (e.g. a resized desktop widget)
+                Item {
+                    id: iconSquare
+                    anchors.centerIn: parent
+                    width: compactItem.showWeatherIconNow ? Math.min(parent.width, parent.height) : parent.width
+                    height: compactItem.showWeatherIconNow ? width : parent.height
+
+                    Kirigami.Icon {
+                        anchors.fill: parent
+                        source: root.weatherIcon
+                        visible: compactItem.showWeatherIconNow
+                        // use the full panel thickness instead of snapping down to 16/22/32/48 px
+                        roundToIconSize: false
+                    }
+
+                    PlasmaComponents3.Label {
+                        id: tempOverlay
+                        anchors.top: parent.top
+                        anchors.right: parent.right
+                        text: root.tempText
+                        visible: root.showTemperature
+                        // configurable size; the desktop usually has room for a larger label
+                        font.pointSize: Plasmoid.formFactor === PlasmaCore.Types.Planar
+                            ? root.cfgTempFontSizeDesktop
+                            : root.cfgTempFontSizePanel
+                        font.weight: Font.Bold
+                        // theme accent color stands out from the icon and follows the active theme
+                        color: Kirigami.Theme.highlightColor
+                        // outline in the theme background color keeps it legible over the icon
+                        style: Text.Outline
+                        styleColor: Kirigami.Theme.backgroundColor
+                    }
+                }
             }
-        }
 
-        Kirigami.Icon {
-            source: root.weatherIcon
-            Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.small)
-            Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.small)
-            visible: compactItem.showWeatherIconNow
-        }
-
-        PlasmaComponents3.Label {
-            text: root.tempText
-            verticalAlignment: Text.AlignVCenter
-            visible: root.showTemperature
-        }
-
-        // fallback so the widget stays clickable when every item is disabled
-        Kirigami.Icon {
-            source: Plasmoid.icon
-            Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.small)
-            Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.small)
-            visible: compactItem.nothingShown
+            // fallback so the widget stays clickable when every item is disabled
+            Kirigami.Icon {
+                source: Plasmoid.icon
+                Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.small)
+                Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.small)
+                visible: compactItem.nothingShown
+            }
         }
     }
 
@@ -345,6 +393,7 @@ PlasmoidItem {
         root.lastErrorCode = ""
         Weather.fetchGeocode(
             root.cfgCity,
+            Qt.locale().name.split("_")[0],
             function (result) {
                 root.resolvedName = result.name
                 root.resolvedCountry = result.country

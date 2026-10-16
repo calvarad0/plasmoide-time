@@ -63,6 +63,8 @@ kpackagetool6 --type Plasma/Applet --remove org.plasma.citytimeweather
 | Show wind          | `showWind` | `true` | Popup |
 | Show last updated  | `showUpdated` | `true` | Popup |
 | Show tooltip       | `showTooltip` | `true` | Tooltip on hover |
+| Temp. size (panel) | `tempFontSizePanel` | `10` | Points; 6–48 |
+| Temp. size (desktop) | `tempFontSizeDesktop` | `12` | Points; 6–48 |
 
 The temperature unit also drives the wind speed unit (km/h vs mph). The time
 format affects the compact view, the popup header and the tooltip.
@@ -88,7 +90,26 @@ contents/config/main.xml   KConfigXT schema (defaults, ranges, choices)
 contents/ui/main.qml       Applet UI: PlasmoidItem root, compact/full views
 contents/ui/js/weather.js  Logic: Open-Meteo requests + WMO code mapping
 contents/ui/configGeneral.qml  Configuration page (general settings)
+contents/locale/           Compiled translations (.mo), loaded by Plasma
+po/                        Translation sources (.po) and helper scripts
 ```
+
+## Translations
+
+The UI follows the desktop language. Spanish (`es`) is included; anything
+without a translation falls back to English. City and country names come from
+Open-Meteo in the desktop language when it supports it.
+
+After changing translatable strings (requires gettext):
+
+```sh
+po/extract.sh   # refresh po/template.pot and merge it into po/*.po
+# edit po/<lang>.po
+po/build.sh     # compile into contents/locale/<lang>/LC_MESSAGES/
+```
+
+To add a language, copy `po/es.po` to `po/<lang>.po`, translate it and run
+`po/build.sh`. Commit both the `.po` and the generated `.mo`.
 
 ## Credits & license
 
@@ -103,5 +124,4 @@ contents/ui/configGeneral.qml  Configuration page (general settings)
     `Plasmoid.action("configure")` / `Plasmoid.showConfigurationInterface()`
     opens the configuration dialog.
   - The `configurationRequired` flag draws the stock Configure button.
-- Weather condition labels are English by default.
 - Requires Plasma 6; the widget will not appear in the Plasma 5 widget list.

@@ -1,0 +1,173 @@
+# Spanish translation for the City Weather & Time plasmoid.
+# SPDX-License-Identifier: GPL-2.0-or-later
+msgid ""
+msgstr ""
+"Project-Id-Version: plasma_applet_org.plasma.citytimeweather\n"
+"PO-Revision-Date: 2026-10-16 00:00+0000\n"
+"Last-Translator: Carlos\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+# contents/config/config.qml
+msgid "General"
+msgstr "General"
+
+# contents/ui/main.qml
+msgid "updated %1"
+msgstr "actualizado %1"
+
+msgid "Weather unavailable"
+msgstr "Clima no disponible"
+
+msgid "Loading…"
+msgstr "Cargando…"
+
+msgid "Refresh weather"
+msgstr "Actualizar clima"
+
+msgid "Enter a city in settings."
+msgstr "Indica una ciudad en la configuración."
+
+msgid "Configure…"
+msgstr "Configurar…"
+
+msgid "Feels like"
+msgstr "Sensación térmica"
+
+msgid "Humidity"
+msgstr "Humedad"
+
+msgid "Wind"
+msgstr "Viento"
+
+msgid "Updated"
+msgstr "Actualizado"
+
+msgid "Try again"
+msgstr "Reintentar"
+
+msgid "City not found."
+msgstr "Ciudad no encontrada."
+
+msgid "Network error."
+msgstr "Error de red."
+
+msgid "Weather service error."
+msgstr "Error del servicio meteorológico."
+
+msgid "Invalid weather data."
+msgstr "Datos meteorológicos no válidos."
+
+msgid "Weather unavailable."
+msgstr "Clima no disponible."
+
+# contents/ui/configGeneral.qml
+msgid "City:"
+msgstr "Ciudad:"
+
+msgid "e.g. Buenos Aires"
+msgstr "p. ej. Buenos Aires"
+
+msgid "Units:"
+msgstr "Unidades:"
+
+msgid "Celsius (°C)"
+msgstr "Celsius (°C)"
+
+msgid "Fahrenheit (°F)"
+msgstr "Fahrenheit (°F)"
+
+msgid "Time format:"
+msgstr "Formato de hora:"
+
+msgid "24-hour (14:05)"
+msgstr "24 horas (14:05)"
+
+msgid "12-hour (2:05 PM)"
+msgstr "12 horas (2:05 PM)"
+
+msgid "Refresh every (minutes):"
+msgstr "Actualizar cada (minutos):"
+
+msgid "Panel"
+msgstr "Panel"
+
+msgid "Show:"
+msgstr "Mostrar:"
+
+msgid "Time"
+msgstr "Hora"
+
+msgid "Date"
+msgstr "Fecha"
+
+msgid "Weather icon"
+msgstr "Icono del clima"
+
+msgid "Temperature"
+msgstr "Temperatura"
+
+msgid "Temperature size in panels (pt):"
+msgstr "Tamaño de la temperatura en paneles (pt):"
+
+msgid "Temperature size on desktop (pt):"
+msgstr "Tamaño de la temperatura en el escritorio (pt):"
+
+msgid "Popup"
+msgstr "Ventana emergente"
+
+msgid "Weather condition"
+msgstr "Condición del clima"
+
+msgid "Last updated"
+msgstr "Última actualización"
+
+msgid "Tooltip:"
+msgstr "Ayuda emergente:"
+
+msgid "Show on hover"
+msgstr "Mostrar al pasar el ratón"
+
+# contents/ui/js/weather.js
+msgid "Clear sky"
+msgstr "Despejado"
+
+msgid "Mainly clear"
+msgstr "Mayormente despejado"
+
+msgid "Partly cloudy"
+msgstr "Parcialmente nublado"
+
+msgid "Overcast"
+msgstr "Cubierto"
+
+msgid "Fog"
+msgstr "Niebla"
+
+msgid "Drizzle"
+msgstr "Llovizna"
+
+msgid "Rain"
+msgstr "Lluvia"
+
+msgid "Snowfall"
+msgstr "Nevada"
+
+msgid "Rain showers"
+msgstr "Chubascos"
+
+msgid "Snow showers"
+msgstr "Chubascos de nieve"
+
+msgid "Thunderstorm"
+msgstr "Tormenta"
+
+msgid "Thunderstorm with hail"
+msgstr "Tormenta con granizo"
+
+msgid "Unknown"
+msgstr "Desconocido"
