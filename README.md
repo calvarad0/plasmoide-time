@@ -21,28 +21,42 @@ APIs (no API key needed).
 
 ## Quick start
 
-Install the widget (run from this directory — the repository root IS the
-package):
+Install the latest release: download the `.plasmoid` file from the
+[releases page](https://github.com/calvarad0/plasmoide-time/releases) and run:
+
+```sh
+kpackagetool6 --type Plasma/Applet --install org.plasma.citytimeweather-<version>.plasmoid
+systemctl --user restart plasma-plasmashell
+```
+
+Or install from a checkout (run from this directory — the repository root IS
+the package):
 
 ```sh
 kpackagetool6 --type Plasma/Applet --install .
+systemctl --user restart plasma-plasmashell
 ```
+
+Restarting the shell makes the widget appear in the list and loads its
+translations; without it the widget may show up in English.
 
 Then right-click the desktop (or a panel) → **Add Widgets** → search for
 **City Weather & Time** → click to add.
 
 Configure: right-click the widget → **Configure…** and set the city name.
 
-Update after a change:
+Update after a change (or to a newer `.plasmoid`), then restart the shell:
 
 ```sh
 kpackagetool6 --type Plasma/Applet --upgrade .
+systemctl --user restart plasma-plasmashell
 ```
 
-Remove:
+Remove: first remove the widget from the desktop and panels, then:
 
 ```sh
 kpackagetool6 --type Plasma/Applet --remove org.plasma.citytimeweather
+systemctl --user restart plasma-plasmashell
 ```
 
 ## Configuration
