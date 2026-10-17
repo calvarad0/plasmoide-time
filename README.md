@@ -4,13 +4,22 @@ A Plasma 6 applet that shows the **current weather and the local wall-clock
 time of any city**, using the free [Open-Meteo](https://open-meteo.com) public
 APIs (no API key needed).
 
+![The calendar popup with weather, events and time zones](docs/screenshot.png)
+
 - City time is shown in the city's own timezone, using the UTC offset that
   Open-Meteo reports for it (daylight-saving changes are picked up on the next
   weather refresh).
 - Current conditions on refresh: temperature, feels-like, humidity, wind speed,
   weather condition and icon.
-- Compact panel form (time, date, icon, temperature), full popup with details,
-  and tooltip. Every element can be turned off in the settings.
+- Compact panel form (time, date, icon, temperature) and a tooltip with the
+  weather details. Every element can be turned off in the settings.
+- Clicking the widget opens a calendar, like the Digital Clock applet. Enable
+  event plugins (holidays, PIM events, astronomical events…) in
+  **Configure… → Calendar** to show the agenda of the selected day.
+  The popup also lists world clocks (the city's time zone plus the ones added
+  in **Configure… → Time Zones**, like the Digital Clock) and the current
+  weather.
+- Right-click → **Refresh weather** fetches the weather immediately.
 - Nothing leaves your machine except the two Open-Meteo requests.
 
 ## Requirements
@@ -71,17 +80,22 @@ systemctl --user restart plasma-plasmashell
 | Show date          | `showDate` | `true` | Panel; shown under the time |
 | Show weather icon  | `showWeatherIcon` | `true` | Panel |
 | Show temperature   | `showTemperature` | `true` | Panel |
-| Show condition     | `showCondition` | `true` | Popup |
-| Show feels like    | `showFeelsLike` | `true` | Popup |
-| Show humidity      | `showHumidity` | `true` | Popup |
-| Show wind          | `showWind` | `true` | Popup |
-| Show last updated  | `showUpdated` | `true` | Popup |
+| Show condition     | `showCondition` | `true` | Tooltip |
+| Show feels like    | `showFeelsLike` | `true` | Tooltip |
+| Show humidity      | `showHumidity` | `true` | Tooltip |
+| Show wind          | `showWind` | `true` | Tooltip |
+| Show last updated  | `showUpdated` | `true` | Tooltip |
 | Show tooltip       | `showTooltip` | `true` | Tooltip on hover |
 | Temp. size (panel) | `tempFontSizePanel` | `10` | Points; 6–48 |
 | Temp. size (desktop) | `tempFontSizeDesktop` | `12` | Points; 6–48 |
+| Show week numbers  | `showWeekNumbers` | `false` | Calendar |
+| First day of week  | `firstDayOfWeek` | `-1` | Calendar; `-1` = region default |
+| Event plugins      | `enabledCalendarPlugins` | empty | Calendar agenda |
+| Time zones         | `selectedTimeZones` | `Local` | World clocks in the popup |
 
 The temperature unit also drives the wind speed unit (km/h vs mph). The time
-format affects the compact view, the popup header and the tooltip.
+format affects the compact view, the tooltip and the agenda. The calendar's
+"today" follows the configured city's date.
 
 ## How it works
 
@@ -101,9 +115,14 @@ format affects the compact view, the popup header and the tooltip.
 metadata.json              Package metadata (KPlugin block + Plasma keys)
 contents/config/config.qml Configuration dialog: category list
 contents/config/main.xml   KConfigXT schema (defaults, ranges, choices)
-contents/ui/main.qml       Applet UI: PlasmoidItem root, compact/full views
+contents/ui/main.qml       Applet UI: PlasmoidItem root, compact view, tooltip
+contents/ui/CalendarView.qml   Popup: date, weather, agenda, time zones, month
+contents/ui/WeatherDetails.qml Weather block shared by the tooltip and popup
+contents/ui/TimeZonesView.qml  World clocks shown in the popup
 contents/ui/js/weather.js  Logic: Open-Meteo requests + WMO code mapping
 contents/ui/configGeneral.qml  Configuration page (general settings)
+contents/ui/configCalendar.qml Configuration page (calendar, event plugins)
+contents/ui/configTimeZones.qml Configuration page (time zones)
 contents/locale/           Compiled translations (.mo), loaded by Plasma
 po/                        Translation sources (.po) and helper scripts
 ```
@@ -128,14 +147,19 @@ To add a language, copy `po/es.po` to `po/<lang>.po`, translate it and run
 ## Credits & license
 
 - Weather data: [Open-Meteo](https://open-meteo.com) (CC-BY 4.0).
-- This widget: GPL-2.0-or-later, © Carlos.
+- This widget: GPL-2.0-or-later, © Carlos Alvarado.
+- The calendar popup, the time zones list and the Calendar and Time Zones
+  settings pages are adapted from the **Digital Clock** applet of KDE
+  [plasma-workspace](https://invent.kde.org/plasma/plasma-workspace)
+  (`applets/digital-clock`, Plasma 6.3), © its KDE authors. Each adapted file
+  keeps its original copyright notices and license in its header:
+  `GPL-2.0-or-later`, or `GPL-2.0-only OR GPL-3.0-only OR
+  LicenseRef-KDE-Accepted-GPL` for the settings pages and `config.qml`.
+- The time zones list relies on the Digital Clock's private QML module
+  (`org.kde.plasma.private.digitalclock`), installed with Plasma. It is not a
+  stable API: if a Plasma release changes it, only the time zones section
+  disappears.
 
 ## Known caveats
 
-- **First-run verification** — the following points could not be verified from
-  docs alone and are marked `// TODO verify on target` in the code:
-  - At least one of `Plasmoid.internalAction("configure")` /
-    `Plasmoid.action("configure")` / `Plasmoid.showConfigurationInterface()`
-    opens the configuration dialog.
-  - The `configurationRequired` flag draws the stock Configure button.
 - Requires Plasma 6; the widget will not appear in the Plasma 5 widget list.
