@@ -147,7 +147,8 @@ To add a language, copy `po/es.po` to `po/<lang>.po`, translate it and run
 ## Credits & license
 
 - Weather data: [Open-Meteo](https://open-meteo.com) (CC-BY 4.0).
-- This widget: GPL-2.0-or-later, © Carlos Alvarado.
+- This widget: GPL-2.0-or-later, © Carlos Alvarado. The full license text is
+  in [LICENSE](LICENSE).
 - The calendar popup, the time zones list and the Calendar and Time Zones
   settings pages are adapted from the **Digital Clock** applet of KDE
   [plasma-workspace](https://invent.kde.org/plasma/plasma-workspace)
