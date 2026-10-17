@@ -134,43 +134,43 @@ KCM.SimpleKCM {
 
         Kirigami.Separator {
             Kirigami.FormData.isSection: true
-            Kirigami.FormData.label: i18n("Popup")
+            Kirigami.FormData.label: i18n("Tooltip")
+        }
+
+        QQC2.CheckBox {
+            id: showTooltipBox
+            text: i18n("Show on hover")
         }
 
         QQC2.CheckBox {
             id: showConditionBox
             Kirigami.FormData.label: i18n("Show:")
             text: i18n("Weather condition")
+            enabled: showTooltipBox.checked
         }
 
         QQC2.CheckBox {
             id: showFeelsLikeBox
             text: i18n("Feels like")
+            enabled: showTooltipBox.checked
         }
 
         QQC2.CheckBox {
             id: showHumidityBox
             text: i18n("Humidity")
+            enabled: showTooltipBox.checked
         }
 
         QQC2.CheckBox {
             id: showWindBox
             text: i18n("Wind")
+            enabled: showTooltipBox.checked
         }
 
         QQC2.CheckBox {
             id: showUpdatedBox
             text: i18n("Last updated")
-        }
-
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
-        }
-
-        QQC2.CheckBox {
-            id: showTooltipBox
-            Kirigami.FormData.label: i18n("Tooltip:")
-            text: i18n("Show on hover")
+            enabled: showTooltipBox.checked
         }
     }
 }

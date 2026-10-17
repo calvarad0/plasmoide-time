@@ -16,6 +16,9 @@ msgstr ""
 msgid "General"
 msgstr "General"
 
+msgid "Calendar"
+msgstr "Calendario"
+
 # contents/ui/main.qml
 msgid "updated %1"
 msgstr "actualizado %1"
@@ -32,9 +35,6 @@ msgstr "Actualizar clima"
 msgid "Enter a city in settings."
 msgstr "Indica una ciudad en la configuración."
 
-msgid "Configure…"
-msgstr "Configurar…"
-
 msgid "Feels like"
 msgstr "Sensación térmica"
 
@@ -46,9 +46,6 @@ msgstr "Viento"
 
 msgid "Updated"
 msgstr "Actualizado"
-
-msgid "Try again"
-msgstr "Reintentar"
 
 msgid "City not found."
 msgstr "Ciudad no encontrada."
@@ -117,17 +114,14 @@ msgstr "Tamaño de la temperatura en paneles (pt):"
 msgid "Temperature size on desktop (pt):"
 msgstr "Tamaño de la temperatura en el escritorio (pt):"
 
-msgid "Popup"
-msgstr "Ventana emergente"
-
 msgid "Weather condition"
 msgstr "Condición del clima"
 
 msgid "Last updated"
 msgstr "Última actualización"
 
-msgid "Tooltip:"
-msgstr "Ayuda emergente:"
+msgid "Tooltip"
+msgstr "Ayuda emergente"
 
 msgid "Show on hover"
 msgstr "Mostrar al pasar el ratón"
@@ -171,3 +165,67 @@ msgstr "Tormenta con granizo"
 
 msgid "Unknown"
 msgstr "Desconocido"
+
+# contents/ui/CalendarView.qml
+msgid "No events for today"
+msgstr "No hay eventos para hoy"
+
+msgid "No events for this day"
+msgstr "No hay eventos para este día"
+
+# contents/ui/configCalendar.qml
+msgid "General:"
+msgstr "General:"
+
+msgid "Show week numbers"
+msgstr "Mostrar números de semana"
+
+msgid "First day of week:"
+msgstr "Primer día de la semana:"
+
+msgid "Use region defaults"
+msgstr "Usar valores de la región"
+
+msgid "Available Plugins:"
+msgstr "Complementos disponibles:"
+
+# contents/config/config.qml, contents/ui/TimeZonesView.qml
+msgid "Time Zones"
+msgstr "Zonas horarias"
+
+msgid "Switch…"
+msgstr "Cambiar…"
+
+msgid "Switch to another time zone"
+msgstr "Cambiar a otra zona horaria"
+
+# contents/ui/configTimeZones.qml
+msgid "The city's time zone is always listed. Time zones that resolve to the same zone are shown once."
+msgstr "La zona horaria de la ciudad siempre aparece. Las zonas que equivalen a la misma se muestran una sola vez."
+
+msgid "Add Time Zones…"
+msgstr "Añadir zonas horarias…"
+
+msgid "Switch Systemwide Time Zone…"
+msgstr "Cambiar la zona horaria del sistema…"
+
+msgid "Remove this time zone"
+msgstr "Quitar esta zona horaria"
+
+msgid "Systemwide Time Zone"
+msgstr "Zona horaria del sistema"
+
+msgid "Additional Time Zones"
+msgstr "Zonas horarias adicionales"
+
+msgid "Add time zones to list them in the calendar pop-up"
+msgstr "Añada zonas horarias para mostrarlas en la ventana del calendario"
+
+msgid "Add More Time Zones"
+msgstr "Añadir más zonas horarias"
+
+msgid "%1, %2 (%3)"
+msgstr "%1, %2 (%3)"
+
+msgid "%1, %2"
+msgstr "%1, %2"

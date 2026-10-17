@@ -86,9 +86,31 @@ PlasmoidItem {
     Plasmoid.icon: "weather-none-ambivalent"
     Plasmoid.configurationRequired: root.cfgCity === ""
 
-    // empty texts hide the tooltip
+    // rich tooltip with the weather details; no item and empty texts hide it
     toolTipMainText: root.showTooltip ? root.toolTipTitle : ""
     toolTipSubText: root.showTooltip ? root.toolTipBody : ""
+    toolTipItem: root.showTooltip ? weatherToolTip : null
+
+    readonly property Item weatherToolTip: Loader {
+        Layout.minimumWidth: item ? item.implicitWidth : 0
+        Layout.maximumWidth: item ? item.implicitWidth : 0
+        Layout.minimumHeight: item ? item.implicitHeight : 0
+        Layout.maximumHeight: item ? item.implicitHeight : 0
+
+        sourceComponent: WeatherDetails {
+            applet: root
+        }
+    }
+
+    // the tooltip holds no controls, so refreshing lives in the context menu
+    Plasmoid.contextualActions: [
+        PlasmaCore.Action {
+            text: i18n("Refresh weather")
+            icon.name: "view-refresh"
+            enabled: root.cfgCity !== ""
+            onTriggered: root.refreshAll()
+        }
+    ]
 
     readonly property string cityDisplayName: root.resolvedName !== "" ? root.resolvedName : root.cfgCity
     readonly property string cityHeader: root.resolvedCountry !== ""
@@ -221,166 +243,9 @@ PlasmoidItem {
         }
     }
 
-    // ----- full representation: the popup shown when clicking the widget ----
-    fullRepresentation: ColumnLayout {
-        id: fullItem
-        spacing: Kirigami.Units.largeSpacing
-        Layout.minimumWidth: 260
-        Layout.minimumHeight: 220
-
-        // header: city + time
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: Kirigami.Units.smallSpacing
-
-            Kirigami.Heading {
-                Layout.fillWidth: true
-                level: 3
-                elide: Text.ElideRight
-                text: root.cityHeader
-            }
-
-            ColumnLayout {
-                spacing: 0
-
-                PlasmaComponents3.Label {
-                    Layout.alignment: Qt.AlignRight
-                    text: root.timeText
-                }
-
-                PlasmaComponents3.Label {
-                    Layout.alignment: Qt.AlignRight
-                    text: root.dateText
-                    font: Kirigami.Theme.smallFont
-                    opacity: 0.7
-                }
-            }
-
-            PlasmaComponents3.ToolButton {
-                icon.name: "view-refresh"
-                Accessible.name: i18n("Refresh weather")
-                onClicked: root.refreshAll()
-            }
-        }
-
-        // placeholder when no city is configured
-        ColumnLayout {
-            Layout.fillWidth: true
-            visible: root.cfgCity === ""
-            spacing: Kirigami.Units.smallSpacing
-
-            PlasmaComponents3.Label {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                text: i18n("Enter a city in settings.")
-            }
-
-            PlasmaComponents3.Button {
-                Layout.alignment: Qt.AlignHCenter
-                text: i18n("Configure\u2026")
-                onClicked: root.openConfiguration()
-            }
-        }
-
-        // main weather block
-        RowLayout {
-            Layout.fillWidth: true
-            visible: root.cfgCity !== ""
-            spacing: Kirigami.Units.largeSpacing
-
-            Kirigami.Icon {
-                source: root.weatherIcon
-                Layout.preferredWidth: Math.round(Kirigami.Units.iconSizes.large)
-                Layout.preferredHeight: Math.round(Kirigami.Units.iconSizes.large)
-                visible: root.fetchState === 2
-            }
-
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 0
-
-                PlasmaComponents3.Label {
-                    text: root.tempText
-                    font.pixelSize: Math.round(Kirigami.Theme.defaultFont.pixelSize * 2)
-                    font.weight: Font.DemiBold
-                }
-
-                PlasmaComponents3.Label {
-                    text: root.conditionText
-                    visible: root.fetchState === 2 && root.showCondition
-                }
-            }
-        }
-
-        // detail rows
-        GridLayout {
-            columns: 2
-            visible: root.fetchState === 2
-                && (root.showFeelsLike || root.showHumidity || root.showWind || root.showUpdated)
-            rowSpacing: Kirigami.Units.smallSpacing
-            columnSpacing: Kirigami.Units.largeSpacing
-
-            PlasmaComponents3.Label { text: i18n("Feels like"); visible: root.showFeelsLike }
-            PlasmaComponents3.Label {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
-                text: root.feelsText
-                visible: root.showFeelsLike
-            }
-
-            PlasmaComponents3.Label { text: i18n("Humidity"); visible: root.showHumidity }
-            PlasmaComponents3.Label {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
-                text: root.humidity >= 0 ? (root.humidity + " %") : "---"
-                visible: root.showHumidity
-            }
-
-            PlasmaComponents3.Label { text: i18n("Wind"); visible: root.showWind }
-            PlasmaComponents3.Label {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
-                text: root.windText
-                visible: root.showWind
-            }
-
-            PlasmaComponents3.Label { text: i18n("Updated"); visible: root.showUpdated }
-            PlasmaComponents3.Label {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
-                text: root.lastUpdated
-                visible: root.showUpdated
-            }
-        }
-
-        // error state
-        ColumnLayout {
-            Layout.fillWidth: true
-            visible: root.fetchState === 3 && root.cfgCity !== ""
-            spacing: Kirigami.Units.smallSpacing
-
-            PlasmaComponents3.Label {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignHCenter
-                color: Kirigami.Theme.negativeTextColor
-                text: root.translateError(root.lastErrorCode)
-            }
-
-            PlasmaComponents3.Button {
-                Layout.alignment: Qt.AlignHCenter
-                text: i18n("Try again")
-                onClicked: root.refreshAll()
-            }
-        }
-
-        // loading hint
-        PlasmaComponents3.Label {
-            Layout.fillWidth: true
-            horizontalAlignment: Text.AlignHCenter
-            visible: root.fetchState === 1 && root.cfgCity !== ""
-            color: Kirigami.Theme.disabledTextColor
-            text: i18n("Loading\u2026")
-        }
+    // ----- full representation: the calendar shown when clicking the widget ----
+    fullRepresentation: CalendarView {
+        applet: root
     }
 
     // ----- logic -------------------------------------------------------------
@@ -457,24 +322,6 @@ PlasmoidItem {
         case "http":     return i18n("Weather service error.")
         case "invalid":  return i18n("Invalid weather data.")
         default:         return i18n("Weather unavailable.")
-        }
-    }
-
-    function openConfiguration() {
-        // Defensive: modern Plasma exposes the "configure" action on the Plasmoid
-        // object; showConfigurationInterface() is the classic fallback.
-        // TODO verify on target: at least one of these must open the dialog.
-        var action = null
-        if (Plasmoid.internalAction) {
-            action = Plasmoid.internalAction("configure")
-        }
-        if (!action && Plasmoid.action) {
-            action = Plasmoid.action("configure")
-        }
-        if (action) {
-            action.trigger()
-        } else if (Plasmoid.showConfigurationInterface) {
-            Plasmoid.showConfigurationInterface()
         }
     }
 

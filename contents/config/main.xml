@@ -48,23 +48,23 @@
       <default>true</default>
     </entry>
     <entry name="showCondition" type="Bool">
-      <label>Show the weather condition text in the popup.</label>
+      <label>Show the weather condition text in the tooltip.</label>
       <default>true</default>
     </entry>
     <entry name="showFeelsLike" type="Bool">
-      <label>Show the feels-like row in the popup.</label>
+      <label>Show the feels-like row in the tooltip.</label>
       <default>true</default>
     </entry>
     <entry name="showHumidity" type="Bool">
-      <label>Show the humidity row in the popup.</label>
+      <label>Show the humidity row in the tooltip.</label>
       <default>true</default>
     </entry>
     <entry name="showWind" type="Bool">
-      <label>Show the wind row in the popup.</label>
+      <label>Show the wind row in the tooltip.</label>
       <default>true</default>
     </entry>
     <entry name="showUpdated" type="Bool">
-      <label>Show the last-updated row in the popup.</label>
+      <label>Show the last-updated row in the tooltip.</label>
       <default>true</default>
     </entry>
     <entry name="showTooltip" type="Bool">
@@ -82,6 +82,24 @@
       <default>12</default>
       <min>6</min>
       <max>48</max>
+    </entry>
+    <entry name="showWeekNumbers" type="Bool">
+      <label>Show week numbers in the calendar.</label>
+      <default>false</default>
+    </entry>
+    <entry name="firstDayOfWeek" type="Int">
+      <label>First day of the week in the calendar; -1 uses the region default.</label>
+      <default>-1</default>
+      <min>-1</min>
+      <max>6</max>
+    </entry>
+    <entry name="enabledCalendarPlugins" type="StringList">
+      <label>Calendar event plugins shown in the agenda.</label>
+      <default></default>
+    </entry>
+    <entry name="selectedTimeZones" type="StringList">
+      <label>Additional time zones listed in the calendar popup, next to the city's.</label>
+      <default>Local</default>
     </entry>
   </group>
 </kcfg>
