@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <!-- Card, styled like the Breeze applet preview icons -->
+  <rect x="10" y="10" width="236" height="236" rx="6" fill="#232629"/>
+  <rect x="12" y="12" width="232" height="232" rx="4" fill="#31363b"/>
+
+  <!-- Local time -->
+  <text x="26" y="78" font-family="Noto Sans, sans-serif" font-size="44" font-weight="bold" fill="#fcfcfc">10:30</text>
+
+  <!-- Weather: sun behind a cloud -->
+  <g stroke="#fdbc4b" stroke-width="5" stroke-linecap="round">
+    <line x1="196" y1="22" x2="196" y2="30"/>
+    <line x1="222" y1="48" x2="214" y2="48"/>
+    <line x1="214.4" y1="29.6" x2="208.7" y2="35.3"/>
+    <line x1="177.6" y1="29.6" x2="183.3" y2="35.3"/>
+  </g>
+  <circle cx="196" cy="48" r="13" fill="#fdbc4b"/>
+  <path d="M168 84 h44 a12 12 0 0 0 0 -24 a16 16 0 0 0 -30 -4 a12 12 0 0 0 -14 28 z" fill="#eff0f1"/>
+
+  <!-- Temperature -->
+  <text x="26" y="124" font-family="Noto Sans, sans-serif" font-size="32" fill="#3daee9">22°</text>
+
+  <!-- Separator -->
+  <rect x="26" y="140" width="204" height="2" fill="#4d4d4d"/>
+
+  <!-- Month view -->
+  <g fill="#4d4d4d">
+    <rect x="26" y="156" width="24" height="18" rx="2"/>
+    <rect x="56" y="156" width="24" height="18" rx="2"/>
+    <rect x="86" y="156" width="24" height="18" rx="2"/>
+    <rect x="116" y="156" width="24" height="18" rx="2"/>
+    <rect x="146" y="156" width="24" height="18" rx="2"/>
+    <rect x="176" y="156" width="24" height="18" rx="2"/>
+    <rect x="206" y="156" width="24" height="18" rx="2"/>
+    <rect x="26" y="180" width="24" height="18" rx="2"/>
+    <rect x="56" y="180" width="24" height="18" rx="2"/>
+    <rect x="86" y="180" width="24" height="18" rx="2"/>
+    <rect x="146" y="180" width="24" height="18" rx="2"/>
+    <rect x="176" y="180" width="24" height="18" rx="2"/>
+    <rect x="206" y="180" width="24" height="18" rx="2"/>
+    <rect x="26" y="204" width="24" height="18" rx="2"/>
+    <rect x="56" y="204" width="24" height="18" rx="2"/>
+    <rect x="86" y="204" width="24" height="18" rx="2"/>
+    <rect x="116" y="204" width="24" height="18" rx="2"/>
+    <rect x="146" y="204" width="24" height="18" rx="2"/>
+    <rect x="176" y="204" width="24" height="18" rx="2"/>
+    <rect x="206" y="204" width="24" height="18" rx="2"/>
+  </g>
+  <!-- Today -->
+  <rect x="116" y="180" width="24" height="18" rx="2" fill="#3daee9"/>
+</svg>

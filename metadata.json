@@ -14,7 +14,7 @@
             "vertical",
             "planar"
         ],
-        "Icon": "weather-none-ambivalent",
+        "Icon": "/icons/org.plasma.citytimeweather.svg",
         "Id": "org.plasma.citytimeweather",
         "License": "GPL-2.0-or-later",
         "Name": "City Weather & Time",
