@@ -19,7 +19,7 @@
         "License": "GPL-2.0-or-later",
         "Name": "City Weather & Time",
         "Name[es]": "Clima y hora de la ciudad",
-        "Version": "0.3.0",
+        "Version": "0.3.1",
         "Website": "https://github.com/calvarad0/plasmoide-time"
     },
     "KPackageStructure": "Plasma/Applet",
